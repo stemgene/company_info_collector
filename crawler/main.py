@@ -10,6 +10,7 @@ from parsel import Selector
 from requests_html import HTMLSession
 from typing import Optional, Dict, Any
 
+
 class CompanyInfoReaderFromJson:
     def __init__(self):
         self.file_path = r"../private/company_info.json"
@@ -39,21 +40,48 @@ class StaticPageParser:
             print("Network is not available")
         return None
     
+    def parsing_by_dynamic_session(**kwargs):
+        position_list = []
+        session = HTMLSession()
+        response = session.get(kwargs["URL"])
+        soup = BeautifulSoup(response.content, "html.parser")
+        company_items = soup.find_all(
+            kwargs["parameters"]["tag"], attrs=kwargs["parameters"]["attribute"]
+        )
+        for position in company_items:
+            position_list.append(position.get_text(strip=True))
+        return position_list
+    
     def parsing(self) -> list:
         company_info_dict = CompanyInfoReaderFromJson().read_json()
         results = []
         for company_info in company_info_dict:
             company_name = company_info['company_name']
+            company_result = {"company_name": company_name, "URL": company_info["URL"]}
             url = company_info['URL']
-            response = self.check_availability(url)
 
             # check if the response is None
+            response = self.check_availability(url)
             if response is None:
                 continue
             
             # check website type
-            if company_info['website_type'] == 'customerized':
-                result = customerized_companies_parsing.parsing(company_info, response)
-                results.append(result)
+            # Type 1: dynamic_HTML_session: could be get info with session
+            if company_info['website_type'] == 'dynamic_HTML_session':
+                company_result["position_list"] = parsing_by_dynamic_session(
+                    **company_info
+                )
+            
+            # Type 2: static_response: extract data from the response of get request
+            elif company_info["website_type"] == "static_response":
+                company_result["position_list"] = parsing_by_response(**company_info)
+            
+            # Type 3: static_HTML: data can be parse by HTML elements, e.g, tags, lists, class_name
+            elif company_info["website_type"] == "static_response":
+                company_result["position_list"] = parsing_by_response(**company_info)
+            
+            
+            results.append(company_result)
+        return results
 
 

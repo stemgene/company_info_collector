@@ -6,11 +6,17 @@
 2. 通过嵌入Google Maps对本地公司进行定位和信息展示。
 
 ## 安装和运行
+
+0. Create Virtual Environment
+   
+```sh
+conda create --name info_collector python=3.11
+
 1. 安装依赖：
 ```sh
 pip install -r requirements.txt
 
-2. 初始化数据库：
+1. 初始化数据库：
 
 python database/init_db.py
 
