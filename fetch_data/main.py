@@ -10,6 +10,32 @@ from parsel import Selector
 from requests_html import HTMLSession
 from typing import Optional, Dict, Any
 
+class Company:
+    def __init__(self, 
+                 id: int,
+                 company_name: str, 
+                 URL: str, 
+                 website_type: str, 
+                 parameters: Dict[str, Any],
+                 filters: list,
+                 is_local: bool,
+                 position: list,
+                 category: str,
+                 available: bool) -> None:
+        self.id = id,
+        self.company_name = company_name
+        self.URL = URL
+        self.website_type = website_type
+        self.parameters = parameters
+        self.filters = filters
+        self.is_local = is_local
+        self.position = position
+        self.category = category
+        self.available = available
+    
+    # Company 类定义了一个 __str__ 方法，当你使用 print(company) 或 str(company) 时，会调用这个方法并返回指定的字符串。
+    def __str__(self) -> str:
+        return f"Company: {self.company_name}, URL: {self.URL}, Is Local: {self.is_local}, Category: {self.category}"
 
 class CompanyInfoReaderFromJson:
     def __init__(self):
@@ -40,6 +66,28 @@ class StaticPageParser:
             print("Network is not available")
         return None
     
+    def get_company_original_info(self, company_original_info: Dict[str, Any]) -> Company:
+        """
+        Convert a dictionary of company information to a Company instance.
+
+        Args:
+            company_original_info: A dictionary containing company information.
+
+        Returns:
+            A Company instance.
+        """
+        id = company_original_info['id']
+        company_name = company_original_info['company_name']
+        url = company_original_info['URL']
+        website_type = company_original_info['website_type']
+        parameters = company_original_info['parameters']
+        filters = company_original_info['filters']
+        is_local = company_original_info['is_local']
+        position = company_original_info['position']
+        category = company_original_info['category']
+        available = company_original_info['available']
+        return Company(id, company_name, url, website_type, parameters, filters, is_local, position, category, available)
+    
     def parsing_by_dynamic_session(**kwargs):
         position_list = []
         session = HTMLSession()
@@ -53,12 +101,11 @@ class StaticPageParser:
         return position_list
     
     def parsing(self) -> list:
-        company_info_dict = CompanyInfoReaderFromJson().read_json()
+        company_original_info_dict = CompanyInfoReaderFromJson().read_json()
         results = []
-        for company_info in company_info_dict:
-            company_name = company_info['company_name']
-            company_result = {"company_name": company_name, "URL": company_info["URL"]}
-            url = company_info['URL']
+        for company_original_info in company_original_info_dict:
+            company = self.get_company_original_info(company_original_info)
+            company_result = {"company_name": company.company_name, "URL": company.URL}
 
             # check if the response is None
             response = self.check_availability(url)
