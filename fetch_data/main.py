@@ -88,16 +88,55 @@ class StaticPageParser:
         available = company_original_info['available']
         return Company(id, company_name, url, website_type, parameters, filters, is_local, position, category, available)
     
-    def parsing_by_dynamic_session(**kwargs):
+    def parsing_by_dynamic_session(self, company: Company) -> list:
         position_list = []
         session = HTMLSession()
-        response = session.get(kwargs["URL"])
+        # check if the response is None
+        if response is None:
+            return position_list
+        response = session.get(company.URL)
         soup = BeautifulSoup(response.content, "html.parser")
         company_items = soup.find_all(
-            kwargs["parameters"]["tag"], attrs=kwargs["parameters"]["attribute"]
+            company.parameters["tag"], attrs=company.parameters["attribute"]
         )
         for position in company_items:
             position_list.append(position.get_text(strip=True))
+        return position_list
+
+    def parsing_by_xpath(self, company: Company) -> list:
+        position_list = []
+        response = self.check_availability(company.URL)
+        data = Selector(response.text)
+        result = data.xpath(company.parameters["xpath_query"]).extract()
+        for position in result:
+            position_list.append(position.strip())
+        return position_list
+
+    def parsing_by_response(self, company: Company) -> list:
+        position_list = []
+        if company.parameters["method"] == "POST":
+            data = json.dumps(company.parameters["data_json"])
+            response = requests.post(
+                company.parameters["server_url"],
+                headers=company.parameters["headers"],
+                data=data,
+            )
+            content = response.json()
+            paths = company.filters["path"].split(".")
+            for hierarchy in paths:
+                content = content[hierarchy]
+            for item in content:
+                position_list.append(item[company.filters["index"]])
+        else:  # "GET"
+            response = requests.get(
+                company.parameters["server_url"], headers=company.parameters["headers"]
+            )
+            content = response.json()
+            # 使用exec并传递当前命名空间
+            local_vars = {"content": content, "position_list": []}
+            exec(company.parameters["script"], globals(), local_vars)
+            position_list = local_vars.get("position_list", [])
+
         return position_list
     
     def parsing(self) -> list:
@@ -106,26 +145,19 @@ class StaticPageParser:
         for company_original_info in company_original_info_dict:
             company = self.get_company_original_info(company_original_info)
             company_result = {"company_name": company.company_name, "URL": company.URL}
-
-            # check if the response is None
-            response = self.check_availability(url)
-            if response is None:
-                continue
             
             # check website type
             # Type 1: dynamic_HTML_session: could be get info with session
-            if company_info['website_type'] == 'dynamic_HTML_session':
-                company_result["position_list"] = parsing_by_dynamic_session(
-                    **company_info
-                )
+            if company.website_type == 'dynamic_HTML_session':
+                company_result["position_list"] = parsing_by_dynamic_session(company)
             
             # Type 2: static_response: extract data from the response of get request
-            elif company_info["website_type"] == "static_response":
-                company_result["position_list"] = parsing_by_response(**company_info)
+            elif company.website_type == "static_response":
+                company_result["position_list"] = parsing_by_response(company)
             
             # Type 3: static_HTML: data can be parse by HTML elements, e.g, tags, lists, class_name
-            elif company_info["website_type"] == "static_response":
-                company_result["position_list"] = parsing_by_response(**company_info)
+            elif company.website_type == "static_xpath":
+                company_result["position_list"] = parsing_by_xpath(company)
             
             
             results.append(company_result)
