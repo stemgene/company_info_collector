@@ -1,0 +1,56 @@
+[
+    {
+        "id": 1,
+        "company_name": "NETSCOUT",
+        "URL": "https://netscoutrccorp.peoplefluent.com/res_joblist.html",
+        "website_type": "static_HTML",
+        "parameters": {
+            "tag": "h3",
+            "attribute": {
+                "class": "title"
+            },
+            "index_num": 0
+        },
+        "filters": [],
+        "is_local": true,
+        "position": [42.55309863630028, -71.44162944490446],
+        "category": "Tech",
+        "available": "True"
+    },
+    {
+        "id": 2,
+        "company_name": "Infinidat",
+        "URL": "https://www.infinidat.com/en/careers#currentopenings",
+        "website_type": "dynamic_HTML_session",
+        "parameters": {
+            "tag": "span",
+            "attribute": {
+                "class": "field-content"
+            },
+            "index_num": 0
+        },
+        "filters": [],
+        "is_local": true,
+        "position": [42.39651151734183, -71.25852770808905],
+        "category": "Tech",
+        "available": "True"
+    },
+    {
+        "id": 3,
+        "company_name": "Motion Recruitment",
+        "URL": "https://motionrecruitment.com/tech-jobs?search-city=Boston&location-display-name=Boston%2C+Massachusetts%2C+United+States&postalcode=02108&radius=25&specialties=machine-learning-data-science",
+        "website_type": "static_HTML",
+        "parameters": {
+            "tag": "h2",
+            "attribute": {
+                "class": "JobItem_title__mJtrY"
+            },
+            "index_num": 0
+        },
+        "filters": [],
+        "is_local": false,
+        "position": [42.574936070623046, -71.30666888400216],
+        "category": "Tech",
+        "available": "True"
+    }
+]

@@ -6,7 +6,7 @@ __pycache__/
 .env
 
 # Database
-private/
+#private/
 
 # Pytest
 .cache/

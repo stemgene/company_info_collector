@@ -1,12 +1,10 @@
 dash
 dash_leaflet
-sqlite3
 requests
-bs4
-re
-json
+beautifulsoup4
 selenium
 selectolax
 chompjs
 parsel
 requests_html
+lxml_html_clean

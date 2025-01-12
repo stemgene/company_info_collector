@@ -5,7 +5,6 @@ import json
 from selenium import webdriver
 from selectolax.parser import HTMLParser
 import chompjs
-import customerized_companies_parsing
 from parsel import Selector
 from requests_html import HTMLSession
 from typing import Optional, Dict, Any
@@ -91,10 +90,10 @@ class StaticPageParser:
     def parsing_by_dynamic_session(self, company: Company) -> list:
         position_list = []
         session = HTMLSession()
+        response = session.get(company.URL)
         # check if the response is None
         if response is None:
             return position_list
-        response = session.get(company.URL)
         soup = BeautifulSoup(response.content, "html.parser")
         company_items = soup.find_all(
             company.parameters["tag"], attrs=company.parameters["attribute"]
@@ -103,13 +102,17 @@ class StaticPageParser:
             position_list.append(position.get_text(strip=True))
         return position_list
 
-    def parsing_by_xpath(self, company: Company) -> list:
+    def parsing_by_tags(self, company: Company) -> list:
         position_list = []
-        response = self.check_availability(company.URL)
-        data = Selector(response.text)
-        result = data.xpath(company.parameters["xpath_query"]).extract()
-        for position in result:
-            position_list.append(position.strip())
+        response = self.get_company_original_info(company.URL)
+        if response is None:
+            return position_list
+        
+        soup = BeautifulSoup(response.text, 'html.parser')
+        company_items = soup.find_all(company.parameters['tag'], attrs=company.parameters['attribute'])
+        for position in company_items:
+            position_list.append(position.text)
+        #print("position_list = ", position_list)
         return position_list
 
     def parsing_by_response(self, company: Company) -> list:
@@ -149,18 +152,21 @@ class StaticPageParser:
             # check website type
             # Type 1: dynamic_HTML_session: could be get info with session
             if company.website_type == 'dynamic_HTML_session':
-                company_result["position_list"] = parsing_by_dynamic_session(company)
+                company_result["position_list"] = self.parsing_by_dynamic_session(company)
             
             # Type 2: static_response: extract data from the response of get request
             elif company.website_type == "static_response":
-                company_result["position_list"] = parsing_by_response(company)
+                company_result["position_list"] = self.parsing_by_response(company)
             
             # Type 3: static_HTML: data can be parse by HTML elements, e.g, tags, lists, class_name
             elif company.website_type == "static_xpath":
-                company_result["position_list"] = parsing_by_xpath(company)
+                company_result["position_list"] = self.parsing_by_xpath(company)
             
             
             results.append(company_result)
         return results
 
-
+if __name__ == "__main__":
+    parser = StaticPageParser()
+    results = parser.parsing()
+    print(results)
