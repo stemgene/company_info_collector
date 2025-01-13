@@ -38,7 +38,7 @@ class Company:
 
 class CompanyInfoReaderFromJson:
     def __init__(self):
-        self.file_path = r"../private/company_info.json"
+        self.file_path = r"private/company_info.json"
 
     def read_json(self) -> Dict[str, Any]: #表示一个字典，其中键是字符串类型，值可以是任意类型。
         try:
@@ -164,6 +164,7 @@ class StaticPageParser:
             
             
             results.append(company_result)
+            print(results)
         return results
 
 if __name__ == "__main__":
