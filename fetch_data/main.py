@@ -7,7 +7,8 @@ from selectolax.parser import HTMLParser
 import chompjs
 from parsel import Selector
 from requests_html import HTMLSession
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
+from database import DatabaseManager
 
 class Company:
     def __init__(self, 
@@ -16,7 +17,6 @@ class Company:
                  URL: str, 
                  website_type: str, 
                  parameters: Dict[str, Any],
-                 filters: list,
                  is_local: bool,
                  position: list,
                  category: str,
@@ -26,7 +26,6 @@ class Company:
         self.URL = URL
         self.website_type = website_type
         self.parameters = parameters
-        self.filters = filters
         self.is_local = is_local
         self.position = position
         self.category = category
@@ -38,23 +37,34 @@ class Company:
 
 class CompanyInfoReaderFromJson:
     def __init__(self):
-        self.file_path = r"private/company_info.json"
+        self.file_path = r"sample_data/company_info.json"
 
-    def read_json(self) -> Dict[str, Any]: #表示一个字典，其中键是字符串类型，值可以是任意类型。
+    def read_json(self) -> List[Any]: #表示一个字典，其中键是字符串类型，值可以是任意类型。
         try:
             with open(self.file_path, 'r', encoding='utf-8') as file:
                 data = json.load(file)
             return data
         except FileNotFoundError:
             print(f"File not found: {self.file_path}")
-            return {}
+            return []
         except json.JSONDecodeError:
             print(f"Error decoding JSON from file: {self.file_path}")
-            return {}
+            return []
+        
+class CompanyInfoReaderFromMongoDB:
+    def __init__(self):
+        self.db_manager = DatabaseManager()
+        self.query = {} # extract all data from the database
+    
+    def read_data_from_db(self) -> List[Any]:
+        data = self.db_manager.fetch_data(query=self.query) 
+        self.db_manager.close_connection()
+        return data
+
 
 class StaticPageParser:
     def __init__(self):
-        self.driver = webdriver.Chrome()
+        self.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
 
     def check_availability(self, url: str) -> Optional[requests.Response]:
         response = requests.get(url)
@@ -75,17 +85,16 @@ class StaticPageParser:
         Returns:
             A Company instance.
         """
-        id = company_original_info['id']
+        id = company_original_info['_id']
         company_name = company_original_info['company_name']
         url = company_original_info['URL']
         website_type = company_original_info['website_type']
         parameters = company_original_info['parameters']
-        filters = company_original_info['filters']
         is_local = company_original_info['is_local']
         position = company_original_info['position']
         category = company_original_info['category']
         available = company_original_info['available']
-        return Company(id, company_name, url, website_type, parameters, filters, is_local, position, category, available)
+        return Company(id, company_name, url, website_type, parameters, is_local, position, category, available)
     
     def parsing_by_dynamic_session(self, company: Company) -> list:
         position_list = []
@@ -118,34 +127,28 @@ class StaticPageParser:
     def parsing_by_response(self, company: Company) -> list:
         position_list = []
         if company.parameters["method"] == "POST":
-            data = json.dumps(company.parameters["data_json"])
             response = requests.post(
                 company.parameters["server_url"],
                 headers=company.parameters["headers"],
-                data=data,
             )
-            content = response.json()
-            paths = company.filters["path"].split(".")
-            for hierarchy in paths:
-                content = content[hierarchy]
-            for item in content:
-                position_list.append(item[company.filters["index"]])
-        else:  # "GET"
+        else:
             response = requests.get(
-                company.parameters["server_url"], headers=company.parameters["headers"]
+                company.parameters["server_url"],
+                headers=company.parameters["headers"],
             )
-            content = response.json()
-            # 使用exec并传递当前命名空间
-            local_vars = {"content": content, "position_list": []}
-            exec(company.parameters["script"], globals(), local_vars)
-            position_list = local_vars.get("position_list", [])
+        content = response.json()
+        # 使用exec并传递当前命名空间
+        local_vars = {"content": content, "position_list": []}
+        exec(company.parameters["script"], globals(), local_vars)
+        position_list = local_vars.get("position_list", [])
 
         return position_list
     
     def parsing(self) -> list:
-        company_original_info_dict = CompanyInfoReaderFromJson().read_json()
+        #company_original_info_dicts = CompanyInfoReaderFromJson().read_json()
+        company_original_info_dicts = CompanyInfoReaderFromMongoDB().read_data_from_db()
         results = []
-        for company_original_info in company_original_info_dict:
+        for company_original_info in company_original_info_dicts:
             company = self.get_company_original_info(company_original_info)
             company_result = {"company_name": company.company_name, "URL": company.URL}
             

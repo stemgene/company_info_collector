@@ -1,0 +1,23 @@
+#app-title > * {
+    color: red;
+    margin: 0;
+    padding: 0;
+}
+
+#gh-link {
+    white-space: nowrap;
+}
+
+.card {
+    margin: 1em 0 1em 0;
+    min-width: auto;
+}
+
+label {
+  display: block;
+  margin-bottom: 0;
+}
+
+#transparent-loader-wrapper > div {
+    visibility: visible !important;
+}

@@ -7,16 +7,20 @@
 
 ## 安装和运行
 
-0. Create Virtual Environment
+0. 安装mongodb
+
+https://www.mongodb.com/try/download/community-kubernetes-operator
+
+1. Create Virtual Environment
    
 ```sh
 conda create --name info_collector python=3.11
 
-1. 安装依赖：
+2. 安装依赖：
 ```sh
 pip install -r requirements.txt
 
-1. 初始化数据库：
+3. 初始化数据库：
 
 python database/init_db.py
 

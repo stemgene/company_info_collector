@@ -1,0 +1,138 @@
+[
+    {
+        "id": 1,
+        "company_name": "NETSCOUT",
+        "URL": "https://netscoutrccorp.peoplefluent.com/res_joblist.html",
+        "website_type": "static_HTML",
+        "parameters": {
+            "tag": "h3",
+            "attribute": {
+                "class": "title"
+            },
+            "index_num": 0
+        },
+        "filters": [],
+        "is_local": true,
+        "position": [42.55309863630028, -71.44162944490446],
+        "category": "Tech",
+        "available": "True"
+    },
+    {
+        "id": 2,
+        "company_name": "Infinidat",
+        "URL": "https://www.infinidat.com/en/careers#currentopenings",
+        "website_type": "dynamic_HTML_session",
+        "parameters": {
+            "tag": "span",
+            "attribute": {
+                "class": "field-content"
+            },
+            "index_num": 0
+        },
+        "filters": [],
+        "is_local": true,
+        "position": [42.39651151734183, -71.25852770808905],
+        "category": "Tech",
+        "available": "True"
+    },
+    {
+        "id": 3,
+        "company_name": "Motion Recruitment",
+        "URL": "https://motionrecruitment.com/tech-jobs?search-city=Boston&location-display-name=Boston%2C+Massachusetts%2C+United+States&postalcode=02108&radius=25&specialties=machine-learning-data-science",
+        "website_type": "dynamic_HTML_session",
+        "parameters": {
+            "tag": "h2",
+            "attribute": {
+                "class": "JobItem_title__mJtrY"
+            },
+            "index_num": 0
+        },
+        "filters": [],
+        "is_local": false,
+        "position": [42.574936070623046, -71.30666888400216],
+        "category": "Tech",
+        "available": "True"
+    },
+    {
+        "id": 4,
+        "company_name": "Curriculum Associates",
+        "URL": "https://curriculumassociates.wd5.myworkdayjobs.com/External?locationCountry=bc33aa3152ec42d4995f4791a106ed09&locationHierarchy1=c42169f49ec90117ff4c5acd0701f8da",
+        "website_type": "static_response",
+        "parameters": {
+            "server_url": "https://curriculumassociates.wd5.myworkdayjobs.com/wday/cxs/curriculumassociates/External/jobs",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            "method": "POST",
+            "script": "for item in content['jobPostings']:\n    if 'MA' in item['externalPath']:\n        position_list.append(item['title'])",
+            "index_num": 0
+        },
+        "filters": [],
+        "is_local": true,
+        "position": [42.574936070623046, -71.30666888400216],
+        "category": "Tech",
+        "available": "True"
+    },
+    {
+        "id": 5,
+        "company_name": "Concept2",
+        "URL": "https://concept2.bamboohr.com/careers",
+        "website_type": "static_response",
+        "parameters": {
+            "server_url": "https://concept2.bamboohr.com/careers/list",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
+            },
+            "method": "GET",
+            "script": "for item in content['result']:\n    position_list.append(item['jobOpeningName'])",
+            "index_num": 0
+        },
+        "filters": [],
+        "is_local": false,
+        "position": [42.56030511657889, -71.43490784961296],
+        "category": "Tech",
+        "available": "True"
+    },
+    {
+        "id": 6,
+        "company_name": "Qlik",
+        "URL": "https://www.qlik.com/us/company/careers/job-listings?page=1&limit=9&country=United%20States",
+        "website_type": "static_response",
+        "parameters": {
+            "server_url": "https://www.qlik.com/page-data/sq/d/1005317560.json",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
+            },
+            "method": "GET",
+            "script": "position_list = [item['node']['title'] for item in content['data']['jobs']['edges'] if item['node']['jobLocations'][0]['name'] == 'USA - Waltham']",
+            "index_num": 0
+        },
+        "filters": [],
+        "is_local": true,
+        "position": [42.40430562336942, -71.27547648856577],
+        "category": "Tech",
+        "available": "True"
+    },
+    {
+        "id": 7,
+        "company_name": "Ramboll",
+        "URL": "https://www.ramboll.com/early-careers",
+        "website_type": "static_response",
+        "parameters": {
+            "server_url": "https://www.ramboll.com/api/jobsPosts?locale=en&countries=United%20States%20of%20America&workplace=Westford&market=&careerStage=&search=&pageNumber=1",
+            "headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
+            },
+            "method": "GET",
+            "script": "position_list = [item['title'] for item in content['jobsPosts']['data']['jobPosts']]",
+            "index_num": 0
+        },
+        "filters": [],
+        "is_local": true,
+        "position": [42.564600842578116, -71.42390798443282],
+        "category": "Environmental",
+        "available": "True"
+    }
+]

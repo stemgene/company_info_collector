@@ -8,3 +8,5 @@ chompjs
 parsel
 requests_html
 lxml_html_clean
+pymongo
+python-dotenv
