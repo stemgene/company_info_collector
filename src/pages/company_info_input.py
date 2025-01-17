@@ -2,75 +2,78 @@ import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output, State
 from database import DatabaseManager
+import dash_bootstrap_components as dbc
 import json
+from src.components import Banner
 
 def layout():
-    return html.Div([
-        html.H1("Company Info Input Page"),
-        dcc.Link('Go to Home Page', href='/', className="card"),
-        html.Br(),
-        html.Label("Company Name"),
-        dcc.Input(id="company-name", type="text", placeholder="Enter company name", className="card"),
-        html.Br(),
-        html.Label("URL"),
-        dcc.Input(id="url", type="text", placeholder="Enter URL", className="card"),
-        html.Br(),
-        html.Label("Category"),
-        dcc.Dropdown(
-            id="category",
-            options=[
-                {"label": "Tech", "value": "tech"},
-                {"label": "Healthcare", "value": "healthcare"},
-                {"label": "Biotech", "value": "biotech"},
-                {"label": "Factory", "value": "factory"},
-                {"label": "Education", "value": "education"},
-                {"label": "Business", "value": "business"},
-                {"label": "Finance", "value": "finance"},
-                {"label": "Resale", "value": "resale"},
-                {"label": "Environments", "value": "environments"},
-                {"label": "Others", "value": "others"}
-            ],
-            placeholder="Select a category", 
-            className="card"
-        ),
-        html.Br(),
-        dcc.Checklist(
-            id="available-checkbox",
-            options=[{"label": "Available for getting position information", "value": "available"}],
-            value=[], 
-            className="card"
-        ),
-        html.Div(id="available-section", style={"display": "none"}, children=[
-            html.Label("Website Type"),
-            dcc.Dropdown(
-            id="website-type",
-            options=[
-                {"label": "dynamic_HTML_session", "value": "dynamic_HTML_session"},
-                {"label": "static_response", "value": "static_response"},
-                {"label": "static_xpath", "value": "static_xpath"}
-            ],
-            placeholder="Select website type", 
-            className="card"
-        ),
-            html.Br(),
-            html.Label("Parameters (JSON format)"),
-            dcc.Textarea(id="parameters", placeholder="Enter parameters", style={'width': '100%', 'height': 200}),
+    return dbc.Container([
+        Banner(),
+        dbc.Row([
+            dbc.Col(html.H2("Company Info Input Page", id="app-title", className="my-4"), width=12, lg=6, className="mx-auto")
         ]),
-        html.Br(),
-        dcc.Checklist(
-            id="is-local-checkbox",
-            options=[{"label": "Is Local", "value": "is_local"}],
-            value=[], 
-            className="card"
-        ),
-        html.Div(id="is-local-section", style={"display": "none"}, children=[
-            html.Label("Position (Latitude, Longitude)"),
-            dcc.Textarea(id="position", placeholder="Enter latitude, longitude", style={'width': '100%', 'height': 20}, className="card")
-        ]),
-        html.Br(),
-        html.Button("Submit", id="submit-button", className="card"),
-        html.Div(id="output", className="card")
-    ])
+        dbc.Row([
+            dbc.Col([
+                dbc.Label("Company Name"),
+                dbc.Input(id="company-name", type="text", placeholder="Enter company name", className="mb-3"),
+                dbc.Label("URL"),
+                dbc.Input(id="company-url", type="text", placeholder="Enter URL", className="mb-3"),
+                dbc.Label("Category"),
+                dcc.Dropdown(
+                    id="company-category",
+                    options=[
+                        {"label": "Tech", "value": "tech"},
+                        {"label": "Healthcare", "value": "healthcare"},
+                        {"label": "Biotech", "value": "biotech"},
+                        {"label": "Factory", "value": "factory"},
+                        {"label": "Education", "value": "education"},
+                        {"label": "Business", "value": "business"},
+                        {"label": "Finance", "value": "finance"},
+                        {"label": "Resale", "value": "resale"},
+                        {"label": "Environments", "value": "environments"},
+                        {"label": "Others", "value": "others"}
+                    ],
+                    placeholder="Select a category", 
+                    value= "tech",
+                    className="mb-3"
+                ),
+                dbc.Checklist(
+                    id="available-checkbox",
+                    options=[{"label": "Available for getting position information", "value": "available"}],
+                    value=[], 
+                    className="mb-3"
+                ),
+                html.Div(id="available-section", style={"display": "none"}, children=[
+                    dbc.Label("Website Type"),
+                    dcc.Dropdown(
+                        id="website-type",
+                        options=[
+                            {"label": "dynamic_HTML_session", "value": "dynamic_HTML_session"},
+                            {"label": "static_response", "value": "static_response"},
+                            {"label": "static_xpath", "value": "static_xpath"}
+                        ],
+                        placeholder="Select website type", 
+                        className="mb-3"
+                    ),
+                    dbc.Label("Parameters (JSON format)"),
+                    dbc.Textarea(id="parameters", placeholder="Enter parameters in JSON format", style={'width': '100%', 'height': 200}, className="mb-3"),
+                ]),
+                dbc.Checklist(
+                    id="is-local-checkbox",
+                    options=[{"label": "Is Local", "value": "is_local"}],
+                    value=[], 
+                    className="mb-3"
+                ),
+                html.Div(id="is-local-section", style={"display": "none"}, children=[
+                    dbc.Label("Position (Latitude, Longitude)"),
+                    dbc.Input(id="company-position", type="text", placeholder="Enter latitude and longitude separated by a comma", className="mb-3")
+                ]),
+                dbc.Button("Submit", id="submit-button", color="primary", className="mb-3"),
+                html.Div(id="output", className="card")
+            ], width=12, lg=6, className="mx-auto"),
+        ])
+    ], fluid=True)
+
 
 def register_callbacks(app):
     @app.callback(
@@ -95,15 +98,15 @@ def register_callbacks(app):
         Output("output", "children"),
         [Input("submit-button", "n_clicks")],
         [State("company-name", "value"),
-         State("url", "value"),
-         State("category", "value"),
+         State("company-url", "value"),
+         State("company-category", "value"),
          State("available-checkbox", "value"),
          State("website-type", "value"),
          State("parameters", "value"),
          State("is-local-checkbox", "value"),
-         State("position", "value")]
+         State("company-position", "value")]
     )
-    def submit_form(n_clicks, company_name, url, category, available_values, website_type, parameters, is_local_values, position):
+    def submit_form(n_clicks, company_name, company_url, company_category, available_values, website_type, parameters, is_local_values, company_position):
         if n_clicks is None:
             return ""
         
@@ -113,14 +116,14 @@ def register_callbacks(app):
             return "Invalid JSON format for parameters."
         
         try:
-            position_list = [float(coord.strip()) for coord in position.split(",")] if position else None
+            position_list = [float(coord.strip()) for coord in company_position.split(",")] if company_position else None
         except ValueError:
             return "Invalid format for position. Please enter latitude and longitude separated by a comma."
         
         company_info = {
             "company_name": company_name,
-            "URL": url,
-            "category": category,
+            "URL": company_url,
+            "category": company_category,
             "available": "available" in available_values,
             "website_type": website_type if "available" in available_values else None,
             "parameters": parameters_dict if "available" in available_values else None,
