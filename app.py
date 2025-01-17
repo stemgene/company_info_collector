@@ -1,6 +1,5 @@
 import dash
 from dash import html, dcc
-import dash_leaflet as dl
 from dash.dependencies import Input, Output
 from src.pages import home_layout, home_register_callbacks, company_info_input_layout, company_info_input_register_callbacks, success_layout
 
