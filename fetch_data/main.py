@@ -167,7 +167,7 @@ class StaticPageParser:
             
             
             results.append(company_result)
-            print(results)
+            #print(results)
         return results
 
 if __name__ == "__main__":

@@ -2,15 +2,24 @@ import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
+from fetch_data import StaticPageParser
 from src.pages import home_layout, home_register_callbacks, company_info_input_layout, company_info_input_register_callbacks, success_layout
 
 # Initialize the Dash app
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 app = dash.Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=external_stylesheets)
 
+# Global variable to store the company info
+def fetch_company_data():
+    parser = StaticPageParser()
+    return parser.parsing()
+global_data = fetch_company_data()
+print("global_data = ", global_data)
+
 # Define the layout of the app
 app.layout = html.Div([
     dcc.Location(id="url", refresh=False),
+    dcc.Store(id='global-data-store', data=global_data),  # Store the global data in dcc.Store
     html.Div(id="page-content")
 ])
 
@@ -23,7 +32,7 @@ def display_page(pathname):
     else:
         return home_layout()
 
-home_register_callbacks(app)
+home_register_callbacks(app, fetch_company_data)
 company_info_input_register_callbacks(app)
 
 # Run the app
