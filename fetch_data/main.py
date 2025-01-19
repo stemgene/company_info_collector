@@ -150,7 +150,21 @@ class StaticPageParser:
         results = []
         for company_original_info in company_original_info_dicts:
             company = self.get_company_original_info(company_original_info)
-            company_result = {"company_name": company.company_name, "URL": company.URL}
+            # company_result = {"id": company.id,
+            #                 "company_name": company.company_name, 
+            #                 "URL": company.URL,
+            #                 "category": company.category,
+            #                 "available": company.available,
+            #                 "is_local": company.is_local,
+            #                 "position": company.position,
+            #                 "parameters": company.parameters
+            #                 }
+            company_result = {"company_name": company.company_name, 
+                              "URL": company.URL,
+                              "is_local": company.is_local,
+                              "category": company.category,
+                              "position": company.position,
+                              "parameters": company.parameters}
             
             # check website type
             # Type 1: dynamic_HTML_session: could be get info with session

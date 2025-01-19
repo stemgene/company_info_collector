@@ -18,9 +18,9 @@ def layout():
         Banner(),
         dbc.Row([
             dbc.Col(dcc.Loading(
-            id="loading",
-            type="default",
-            children=html.Div(id='filtered-results', className="card")
+                id="loading",
+                type="default",
+                children=html.Div(id='filtered-results', className="card")
             ), width=12, lg=6, className="mx-auto")
         ]),
         dbc.Row([

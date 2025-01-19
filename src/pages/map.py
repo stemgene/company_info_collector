@@ -5,6 +5,9 @@ from dash.dependencies import Input, Output  # Import dependencies for callbacks
 import json  # Import JSON library
 import requests  # Import requests library to make API calls
 import os
+import dash_bootstrap_components as dbc
+from src.components.banner import Banner
+
 
 # Define a class for company data
 class Company:
@@ -81,82 +84,33 @@ class Route:
         route = self.get_route()
         return dl.Polyline(positions=route, color="grey", weight=5)
 
-# Initialize the Dash app
-app = dash.Dash(__name__)
-
-# Load marker data from JSON file
-with open('website_urls.json', 'r') as f:
-    all_marker_data = json.load(f)
-
-# Filter marker data where "is_local" is True and create Company instances
-companies = [
-    Company.from_dict(m) for m in all_marker_data if m["is_local"]
-]
-
-# Load crossed place data from JSON file
-with open('crossed_place.json', 'r') as f:
-    crossed_place_data = json.load(f)
-
-# Load finished street data from JSON file
-with open('finished_street.json', 'r') as f:
-    finished_street_data = json.load(f)
-
 # Define the layout of the app
-app.layout = html.Div([
-    html.H1("Massachusetts Tech Company Map", style={'textAlign': 'center'}),  # Header
-    html.Div("A basic example integrating Dash and Google Maps.", style={'textAlign': 'center'}),  # Description
+def map_layout():
+    return dbc.Container([
+        Banner(),
+        dbc.Row([
+            dbc.Col(html.H1("Local Company Map", className="text-center my-4"), width=12)
+        ]),
+        dbc.Row([
+            dbc.Col([
+                dl.Map(center=[42.3765, -71.2356], zoom=13, children=[
+                    dl.TileLayer(),
+                    dl.LayerGroup(id="layer")
+                ], style={'width': '100%', 'height': '500px'})
+            ], width=12, lg=8, className="mx-auto")
+        ])
+    ], fluid=True)
 
-    html.Div([
-        # Left side menu and data display area
-        html.Div([
-            dcc.Dropdown(
-                id='category-dropdown',
-                options=[
-                    {'label': 'Tech', 'value': 'tech'},
-                    {'label': 'Healthcare', 'value': 'healthcare'}
-                ],
-                value='tech',
-                style={'width': '100%'}
-            ),
-            html.Div(id='url-display', style={'marginTop': '20px'})
-        ], style={'width': '30%', 'display': 'inline-block', 'verticalAlign': 'top', 'padding': '20px'}),
-
-        # Right side map area
-        html.Div([
-            dl.Map(
-                id='map',
-                center=[42.3765, -71.2356],  # Centered at Waltham, MA
-                zoom=12,
-                children=[
-                    dl.TileLayer(url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
-                ],
-                style={'width': '100%', 'height': '75vh', 'margin': 'auto'}
-            )
-        ], style={'width': '70%', 'display': 'inline-block', 'verticalAlign': 'top'})
-    ], style={'display': 'flex'})
-])
-
-# Callback to update the map markers and URL display based on the selected category
-@app.callback(
-    [Output('map', 'children'), Output('url-display', 'children')],
-    [Input('category-dropdown', 'value')]
-)
-def update_map(selected_category):
-    filtered_companies = [c for c in companies if c.category.lower() == selected_category.lower()]
-    map_markers = [Marker(c).to_dl_marker() for c in filtered_companies]
-    urls = []
-    for c in filtered_companies:
-        urls.append(html.Div(html.A(c.company_name, href=c.url, target="_blank")))
-        urls.append(html.Br())  # Insert a blank line
-
-    # Add red cross markers for crossed places
-    crossed_markers = [CrossedMarker(name, data).to_dl_marker() for name, data in crossed_place_data.items()]
-
-    # Add polylines for finished streets
-    finished_streets = [Route(data[0], data[1]).to_dl_polyline() for name, data in finished_street_data.items()]
-
-    return [dl.TileLayer(url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")] + map_markers + crossed_markers + finished_streets, urls
-
-# Run the app
-if __name__ == '__main__':
-    app.run_server(debug=True)  # Run the Dash app in debug mode
+def register_callbacks(app):
+    @app.callback(
+        Output("layer", "children"),
+        [Input('url', 'pathname'), Input('global-data-store', 'data')]
+    )
+    def update_map(pathname, global_data):
+        if pathname == "/map":
+            # Filter the global_data to only include local companies
+            local_companies = [Company.from_dict(data) for data in global_data if data.get("is_local")]
+            print(global_data)
+            markers = [Marker(company).to_dl_marker() for company in local_companies]
+            return markers
+        return []

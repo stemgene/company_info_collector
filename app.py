@@ -3,7 +3,7 @@ from dash import html, dcc
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from fetch_data import StaticPageParser
-from src.pages import home_layout, home_register_callbacks, company_info_input_layout, company_info_input_register_callbacks, success_layout
+from src.pages import home_layout, home_register_callbacks, company_info_input_layout, company_info_input_register_callbacks, success_layout, map_layout, map_register_callbacks
 
 # Initialize the Dash app
 external_stylesheets = [dbc.themes.BOOTSTRAP]
@@ -14,7 +14,7 @@ def fetch_company_data():
     parser = StaticPageParser()
     return parser.parsing()
 global_data = fetch_company_data()
-print("global_data = ", global_data)
+#print("global_data = ", global_data)
 
 # Define the layout of the app
 app.layout = html.Div([
@@ -29,11 +29,14 @@ def display_page(pathname):
         return company_info_input_layout()
     elif pathname == "/success":
         return success_layout()
+    elif pathname == "/map":
+        return map_layout()
     else:
         return home_layout()
 
 home_register_callbacks(app, fetch_company_data)
 company_info_input_register_callbacks(app)
+map_register_callbacks(app)
 
 # Run the app
 if __name__ == "__main__":
