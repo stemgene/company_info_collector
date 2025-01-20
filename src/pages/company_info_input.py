@@ -65,8 +65,8 @@ def layout():
                     className="mb-3"
                 ),
                 html.Div(id="is-local-section", style={"display": "none"}, children=[
-                    dbc.Label("Position (Latitude, Longitude)"),
-                    dbc.Input(id="company-position", type="text", placeholder="Enter latitude and longitude separated by a comma", className="mb-3")
+                    dbc.Label("Location (Latitude, Longitude)"),
+                    dbc.Input(id="company-location", type="text", placeholder="Enter latitude and longitude separated by a comma", className="mb-3")
                 ]),
                 dbc.Button("Submit", id="submit-button", color="primary", className="mb-3"),
                 html.Div(id="output", className="card")
@@ -104,9 +104,9 @@ def register_callbacks(app):
          State("website-type", "value"),
          State("parameters", "value"),
          State("is-local-checkbox", "value"),
-         State("company-position", "value")]
+         State("company-location", "value")]
     )
-    def submit_form(n_clicks, company_name, company_url, company_category, available_values, website_type, parameters, is_local_values, company_position):
+    def submit_form(n_clicks, company_name, company_url, company_category, available_values, website_type, parameters, is_local_values, company_location):
         if n_clicks is None:
             return ""
         
@@ -116,9 +116,9 @@ def register_callbacks(app):
             return "Invalid JSON format for parameters."
         
         try:
-            position_list = [float(coord.strip()) for coord in company_position.split(",")] if company_position else None
+            location_list = [float(coord.strip()) for coord in company_location.split(",")] if company_location else None
         except ValueError:
-            return "Invalid format for position. Please enter latitude and longitude separated by a comma."
+            return "Invalid format for location. Please enter latitude and longitude separated by a comma."
         
         company_info = {
             "company_name": company_name,
@@ -128,7 +128,7 @@ def register_callbacks(app):
             "website_type": website_type if "available" in available_values else None,
             "parameters": parameters_dict if "available" in available_values else None,
             "is_local": "is_local" in is_local_values,
-            "position": position_list if "is_local" in is_local_values else None
+            "location": location_list if "is_local" in is_local_values else None
         }
         
         # Save the company_info to the database

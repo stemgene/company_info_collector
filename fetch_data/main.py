@@ -18,7 +18,7 @@ class Company:
                  website_type: str, 
                  parameters: Dict[str, Any],
                  is_local: bool,
-                 position: list,
+                 location: list,
                  category: str,
                  available: bool) -> None:
         self.id = id,
@@ -27,7 +27,7 @@ class Company:
         self.website_type = website_type
         self.parameters = parameters
         self.is_local = is_local
-        self.position = position
+        self.location = location
         self.category = category
         self.available = available
     
@@ -91,10 +91,10 @@ class StaticPageParser:
         website_type = company_original_info['website_type']
         parameters = company_original_info['parameters']
         is_local = company_original_info['is_local']
-        position = company_original_info['position']
+        location = company_original_info['location']
         category = company_original_info['category']
         available = company_original_info['available']
-        return Company(id, company_name, url, website_type, parameters, is_local, position, category, available)
+        return Company(id, company_name, url, website_type, parameters, is_local, location, category, available)
     
     def parsing_by_dynamic_session(self, company: Company) -> list:
         position_list = []
@@ -163,7 +163,7 @@ class StaticPageParser:
                               "URL": company.URL,
                               "is_local": company.is_local,
                               "category": company.category,
-                              "position": company.position,
+                              "location": company.location,
                               "parameters": company.parameters}
             
             # check website type

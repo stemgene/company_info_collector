@@ -11,8 +11,8 @@ from src.components.banner import Banner
 
 # Define a class for company data
 class Company:
-    def __init__(self, position, company_name, url, category):
-        self.position = position
+    def __init__(self, location, company_name, url, category):
+        self.location = location
         self.company_name = company_name
         self.url = url
         self.category = category
@@ -20,7 +20,7 @@ class Company:
     @classmethod
     def from_dict(cls, data):
         return cls(
-            position=data["position"],
+            location=data["location"],
             company_name=data["company_name"],
             url=data["URL"],
             category=data["category"]
@@ -33,7 +33,7 @@ class Marker:
 
     def to_dl_marker(self):
         return dl.Marker(
-            position=self.company.position,
+            position=self.company.location, # this "position" argument is from the Dash Leaflet library, not the same as the "position" attribute of the Company class
             icon={
                 "iconUrl": "https://maps.gstatic.com/mapfiles/ms2/micons/orange-dot.png",
                 "iconSize": [32, 32],
@@ -54,7 +54,7 @@ class CrossedMarker:
 
     def to_dl_marker(self):
         return dl.Marker(
-            position=self.data[1],
+            location=self.data[1],
             icon={
                 "iconUrl": "https://maps.google.com/mapfiles/kml/shapes/cross-hairs.png",
                 "iconSize": [32, 32],

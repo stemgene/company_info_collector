@@ -12,6 +12,7 @@ class DatabaseManager:
         load_dotenv()
         mongodb_username = os.getenv("MONGODB_USERNAME")
         mongodb_password = os.getenv("MONGODB_PASSWORD")
+        # Replace the following line to your MongoDB URI
         uri = f"mongodb+srv://{mongodb_username}:{mongodb_password}@mynosqlserver.1ev6o.mongodb.net/?retryWrites=true&w=majority&appName=MyNoSQLServer"
 
         # Create a new client and connect to the server
@@ -75,7 +76,7 @@ if __name__ == "__main__":
         },
         "filters": [],
         "is_local": True,
-        "position": [42.55309863630028, -71.44162944490446],
+        "location": [42.55309863630028, -71.44162944490446],
         "category": "Tech",
         "available": "True"
     }

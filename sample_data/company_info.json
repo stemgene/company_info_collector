@@ -13,7 +13,7 @@
         },
         "filters": [],
         "is_local": true,
-        "position": [42.55309863630028, -71.44162944490446],
+        "location": [42.55309863630028, -71.44162944490446],
         "category": "Tech",
         "available": "True"
     },
@@ -31,14 +31,14 @@
         },
         "filters": [],
         "is_local": true,
-        "position": [42.39651151734183, -71.25852770808905],
+        "location": [42.39651151734183, -71.25852770808905],
         "category": "Tech",
         "available": "True"
     },
     {
         "id": 3,
         "company_name": "Motion Recruitment",
-        "URL": "https://motionrecruitment.com/tech-jobs?search-city=Boston&location-display-name=Boston%2C+Massachusetts%2C+United+States&postalcode=02108&radius=25&specialties=machine-learning-data-science",
+        "URL": "https://motionrecruitment.com/tech-jobs?search-city=Boston&position-display-name=Boston%2C+Massachusetts%2C+United+States&postalcode=02108&radius=25&specialties=machine-learning-data-science",
         "website_type": "dynamic_HTML_session",
         "parameters": {
             "tag": "h2",
@@ -49,14 +49,14 @@
         },
         "filters": [],
         "is_local": false,
-        "position": [42.574936070623046, -71.30666888400216],
+        "location": [42.574936070623046, -71.30666888400216],
         "category": "Tech",
         "available": "True"
     },
     {
         "id": 4,
         "company_name": "Curriculum Associates",
-        "URL": "https://curriculumassociates.wd5.myworkdayjobs.com/External?locationCountry=bc33aa3152ec42d4995f4791a106ed09&locationHierarchy1=c42169f49ec90117ff4c5acd0701f8da",
+        "URL": "https://curriculumassociates.wd5.myworkdayjobs.com/External?positionCountry=bc33aa3152ec42d4995f4791a106ed09&positionHierarchy1=c42169f49ec90117ff4c5acd0701f8da",
         "website_type": "static_response",
         "parameters": {
             "server_url": "https://curriculumassociates.wd5.myworkdayjobs.com/wday/cxs/curriculumassociates/External/jobs",
@@ -71,7 +71,7 @@
         },
         "filters": [],
         "is_local": true,
-        "position": [42.574936070623046, -71.30666888400216],
+        "location": [42.574936070623046, -71.30666888400216],
         "category": "Tech",
         "available": "True"
     },
@@ -91,7 +91,7 @@
         },
         "filters": [],
         "is_local": false,
-        "position": [42.56030511657889, -71.43490784961296],
+        "location": [42.56030511657889, -71.43490784961296],
         "category": "Tech",
         "available": "True"
     },
@@ -106,12 +106,12 @@
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
             },
             "method": "GET",
-            "script": "position_list = [item['node']['title'] for item in content['data']['jobs']['edges'] if item['node']['jobLocations'][0]['name'] == 'USA - Waltham']",
+            "script": "position_list = [item['node']['title'] for item in content['data']['jobs']['edges'] if item['node']['jobpositions'][0]['name'] == 'USA - Waltham']",
             "index_num": 0
         },
         "filters": [],
         "is_local": true,
-        "position": [42.40430562336942, -71.27547648856577],
+        "location": [42.40430562336942, -71.27547648856577],
         "category": "Tech",
         "available": "True"
     },
@@ -131,7 +131,7 @@
         },
         "filters": [],
         "is_local": true,
-        "position": [42.564600842578116, -71.42390798443282],
+        "location": [42.564600842578116, -71.42390798443282],
         "category": "Environmental",
         "available": "True"
     }
