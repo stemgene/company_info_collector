@@ -2,6 +2,8 @@
 
 ## Introduction
 
+When searching for job opportunities, we often visit job boards like LinkedIn, Glassdoor, and Indeed. However, there are dozens of such websites, and it’s impossible to browse them all. Additionally, not all companies post their open positions on the platforms we frequent. As a result, we often visit individual company websites to check for newly released positions. If the number of these websites grows, manually opening dozens of sites daily becomes tedious. A unified platform that consolidates information from these customized sources is highly desirable. This project aims to address this need.
+
 This project includes two main features:
 1. Extract job position information from target companies using web scraping. If couldn't extract the available positions by some reasons, you can also put the company's name and link on the page just as a reminder.
 2. Embed Google Maps to locate and display information about local companies.
@@ -20,9 +22,9 @@ pip install -r requirements.txt
 ```
 3. Configure MongoDB database and Environment Variables
 
-Based on the varisity of the methods and parameters how to extract position data from different companies, the best way to save company infomation should be the NoSQL (MongoDB) which can save data with JSON format.
+Given the diversity of methods and parameters required to extract job data from different companies, NoSQL (MongoDB) is the best option for saving company information due to its ability to store data in JSON format.
 
-There's an easy and free way to get the MongoDB survice, i.e. [MongoDB Altlas] (https://www.mongodb.com/try). After registering a MongoDB account and creating, 获得相关credentials
+You can use [MongoDB Atlas](https://www.mongodb.com/try), a simple and free way to access MongoDB services. After registering for an account and creating a cluster, obtain the necessary credentials.
 
 Create a `.env` file in the project root directory and add the following content:
 ```sh
@@ -35,6 +37,15 @@ python dash_app/app.py
 ```
 
 ## Usage
+
+### Extracting Job Position Information
+Before adding company information, you need to determine whether it is technically feasible to extract job data from the company's website. Each company’s website has a unique structure, making this process the most challenging and requiring customization.
+
+Due to my limited web scraping capabilities, I can currently extract data from specific types of website structures, such as static HTML, JSON files retrieved via fetch requests, and some dynamic websites.
+
+A testing notebook for web scraping (`fetch_data/static_page_parsing.ipynb`) is provided. Only after successful testing can the method for extracting data from a specific website be categorized and the necessary parameters recorded in the database.
+
+If job information cannot be extracted, you can still add the company’s information to the database by setting the "available" field to false. Although specific job positions will not be displayed, the company will still act as a reminder, prompting you to manually check its website daily.
 
 ### Home page: Display interested company positions
 1. After starting the application, open your browser and visit http://127.0.0.1:8050.
@@ -54,14 +65,18 @@ There's some examples in `sample_data/company_info.json`
 
 
 ### Modifying Initial Map Coordinates
-To modify the initial coordinates of the map, update the MapComponent.py file. Locate the section where the map is initialized and change the latitude and longitude values to your desired coordinates.
+To modify the initial coordinates of the map, update the `src/pages/map.py` file. Locate the section where the map is initialized and change the latitude and longitude values to your desired coordinates.
 ```python
-import dash_leaflet as dl
-
-def MapComponent():
-    return dl.Map(center=[40.7128, -74.0060], zoom=10, children=[
-        dl.TileLayer(),
-        # Add more map layers or markers here
-    ])
+dbc.Row([
+    dbc.Col([
+        html.Div(id='company-list', className="card", style={'height': '75vh', 'overflowY': 'scroll'})
+    ], width=3),
+    dbc.Col([
+        dl.Map(center=[42.3765, -71.2356], zoom=13, children=[ #replace the center with your location 
+            dl.TileLayer(url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"),
+            dl.LayerGroup(id="layer")
+        ], style={'width': '100%', 'height': '75vh', 'margin': 'auto'})
+    ], width=9)
+], style={'width': '80%', 'margin': 'auto'})
 ```
 In this example, the map is centered on New York City (latitude: 40.7128, longitude: -74.0060). Update these values to change the initial map coordinates.
