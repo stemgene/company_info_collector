@@ -93,24 +93,32 @@ def map_layout():
         ]),
         dbc.Row([
             dbc.Col([
+                html.Div(id='company-list', className="card", style={'height': '75vh', 'overflowY': 'scroll'})
+            ], width=3),
+            dbc.Col([
                 dl.Map(center=[42.3765, -71.2356], zoom=13, children=[
-                    dl.TileLayer(),
+                    dl.TileLayer(url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"),
                     dl.LayerGroup(id="layer")
-                ], style={'width': '100%', 'height': '500px'})
-            ], width=12, lg=8, className="mx-auto")
-        ])
+                ], style={'width': '100%', 'height': '75vh', 'margin': 'auto'})
+            ], width=9)
+        ], style={'width': '80%', 'margin': 'auto'})
     ], fluid=True)
 
 def register_callbacks(app):
     @app.callback(
-        Output("layer", "children"),
+        [Output("layer", "children"), Output("company-list", "children")],
         [Input('url', 'pathname'), Input('global-data-store', 'data')]
     )
     def update_map(pathname, global_data):
         if pathname == "/map":
             # Filter the global_data to only include local companies
             local_companies = [Company.from_dict(data) for data in global_data if data.get("is_local")]
-            print(global_data)
             markers = [Marker(company).to_dl_marker() for company in local_companies]
-            return markers
-        return []
+            company_list = [
+                dbc.ListGroupItem([
+                    html.H5(html.A(company.company_name, href=company.url, target="_blank")),
+                    html.P(company.category)
+                ]) for company in local_companies
+            ]
+            return markers, company_list
+        return [], []
