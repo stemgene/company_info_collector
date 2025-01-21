@@ -11,6 +11,7 @@ def Banner():
                 dbc.Col(dbc.NavLink("Home", href="/", className="nav-link", style={"maxWidth": "150px", "overflow": "hidden", "textOverflow": "ellipsis", "whiteSpace": "nowrap"})),
                 dbc.Col(dbc.NavLink("Input Company Info", href="/company-info-input", className="nav-link", style={"maxWidth": "150px", "overflow": "hidden", "textOverflow": "ellipsis", "whiteSpace": "nowrap"})),
                 dbc.Col(dbc.NavLink("Local Company on Map", href="/map", className="nav-link", style={"maxWidth": "150px", "overflow": "hidden", "textOverflow": "ellipsis", "whiteSpace": "nowrap"})),
+                dbc.Col(dbc.NavLink("GitHub", href="https://github.com/stemgene/company_info_collector", className="nav-link", style={"maxWidth": "150px", "overflow": "hidden", "textOverflow": "ellipsis", "whiteSpace": "nowrap"})),
             ], className="ml-auto", align="center"),
         ]),
         color="dark",

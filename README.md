@@ -2,7 +2,7 @@
 
 ## Introduction
 
-When searching for job opportunities, we often visit job boards like LinkedIn, Glassdoor, and Indeed. However, there are dozens of such websites, and it’s impossible to browse them all. Additionally, not all companies post their open positions on the platforms we frequent. As a result, we often visit individual company websites to check for newly released positions. If the number of these websites grows, manually opening dozens of sites daily becomes tedious. A unified platform that consolidates information from these customized sources is highly desirable. This project aims to address this need.
+When searching for job opportunities, we often visit job boards like LinkedIn, Glassdoor, and Indeed. However, there are dozens of such websites, and it’s impossible to browse them all. Additionally, not all companies post their open positions on the platforms we frequent browsed. As a result, we often visit individual company websites to check for newly released positions. If the number of these websites grows, manually opening dozens of sites daily becomes tedious. A unified platform that consolidates information from these customized sources is highly desirable. This project aims to address this need.
 
 This project includes two main features:
 1. Extract job position information from target companies using web scraping. If couldn't extract the available positions by some reasons, you can also put the company's name and link on the page just as a reminder.
@@ -11,7 +11,6 @@ This project includes two main features:
 ## Installation
 
 1. Create Virtual Environment
-   
 ```sh
 conda create --name info_collector python=3.11
 conda activate info_collector
