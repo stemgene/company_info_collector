@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import re
 import json
 from selenium import webdriver
+from selenium.webdriver.edge.service import Service
+from selenium.webdriver.edge.options import Options
 from selectolax.parser import HTMLParser
 import chompjs
 from parsel import Selector
@@ -60,7 +62,26 @@ class CompanyInfoReaderFromMongoDB:
         data = self.db_manager.fetch_data(query=self.query) 
         self.db_manager.close_connection()
         return data
+    
+class EdgeBrowser:
+    def __init__(self, headless=True):
+        self.driver_path = r"assets/edgedriver_win64/msedgedriver.exe"
+        self.headless = headless # if "headless" is True, the browser will not pop up
+        self.driver = None # initialize the driver as None
 
+    def start_browser(self):
+        options = Options()
+        options.use_chromium = True  # Use the Chromium browser
+        if self.headless:
+            options.add_argument('--headless')  
+        service = Service(executable_path=self.driver_path)
+        self.driver = webdriver.Edge(options=options, service=service)
+        return self.driver
+
+    def stop_browser(self):
+        if self.driver:
+            self.driver.quit()
+            self.driver = None
 
 class StaticPageParser:
     def __init__(self):
@@ -130,6 +151,22 @@ class StaticPageParser:
 
         return position_list
     
+    def parsing_by_dynamic_website(self, company: Company) -> list:
+        position_list = []
+        browser = EdgeBrowser(headless=True)
+        driver = browser.start_browser()
+        driver.get(company.URL)
+        driver.implicitly_wait(3)
+        html = driver.page_source
+        browser.stop_browser()
+        soup = BeautifulSoup(html, 'html.parser')
+        company_items = soup.find_all(
+            company.parameters["tag"], attrs=company.parameters["attribute"]
+        )
+        for position in company_items:
+            position_list.append(position.get_text(strip=True))
+        return position_list
+    
     def parsing(self) -> list:
         #company_original_info_dicts = CompanyInfoReaderFromJson().read_json() # read data from json file
         company_original_info_dicts = CompanyInfoReaderFromMongoDB().read_data_from_db()
@@ -152,9 +189,11 @@ class StaticPageParser:
             elif company.website_type == "static_response":
                 company_result["position_list"] = self.parsing_by_response(company)
             
-            # Type 3: static_HTML: data can be parse by HTML elements, e.g, tags, lists, class_name
-            elif company.website_type == "static_xpath":
-                company_result["position_list"] = self.parsing_by_xpath(company)
+            # Type 3: parse_script: extract data from the script code
+
+            # Type 4: dynamic_website: use selenium to get the dynamic HTML
+            elif company.website_type == "dynamic_website":
+                company_result["position_list"] = self.parsing_by_dynamic_website(company)
             
             
             results.append(company_result)
