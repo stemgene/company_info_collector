@@ -46,6 +46,17 @@ A testing notebook for web scraping (`fetch_data/static_page_parsing.ipynb`) is 
 
 If job information cannot be extracted, you can still add the company’s information to the database by setting the "available" field to false. Although specific job positions will not be displayed, the company will still act as a reminder, prompting you to manually check its website daily.
 
+#### Categories of companies' website types (Methods that how can get position information from the company's website)
+
+* **Static HTML**: After requesting with `HTMLsession`, the content can be found inside the `respond`. This is the easiest way to get data. Use `BeautifulSoup` to parse data with tags such as `<div>`, `<span>` and `<p>`.
+
+* **Get/Post request**: Positions data can be found with API by a JSON file transported in `Network` -- `Fetch/XHR` .
+
+* **parsing script**: Rather than be stored in HTML DOM, the data has been transported in the tag of `<script>`.
+
+* **Dynamic website**: This is the last choice if have tried all methods above but still couldn't get data. This method is based on `selenium` webdriver, it can simulate the human behavior to open the webpages and click the buttons. Comparing to other methods, this will take more time with about more than 10s per website.
+
+
 ### Home page: Display interested company positions
 1. After starting the application, open your browser and visit http://127.0.0.1:8050.
 2. Use the filter component to select the job types you are interested in.
@@ -61,7 +72,6 @@ Companies can be classified into three categories:
 * Local Companies: These companies are local and can be displayed on the map.
 
 There's some examples in `sample_data/company_info.json`
-
 
 ### Modifying Initial Map Coordinates
 To modify the initial coordinates of the map, update the `src/pages/map.py` file. Locate the section where the map is initialized and change the latitude and longitude values to your desired coordinates.

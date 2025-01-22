@@ -21,7 +21,7 @@
         "id": 2,
         "company_name": "Infinidat",
         "URL": "https://www.infinidat.com/en/careers#currentopenings",
-        "website_type": "dynamic_HTML_session",
+        "website_type": "staticHTML",
         "parameters": {
             "tag": "span",
             "attribute": {
@@ -39,7 +39,7 @@
         "id": 3,
         "company_name": "Motion Recruitment",
         "URL": "https://motionrecruitment.com/tech-jobs?search-city=Boston&position-display-name=Boston%2C+Massachusetts%2C+United+States&postalcode=02108&radius=25&specialties=machine-learning-data-science",
-        "website_type": "dynamic_HTML_session",
+        "website_type": "staticHTML",
         "parameters": {
             "tag": "h2",
             "attribute": {

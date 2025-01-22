@@ -48,7 +48,7 @@ def layout():
                     dcc.Dropdown(
                         id="website-type",
                         options=[
-                            {"label": "dynamic_HTML_session", "value": "dynamic_HTML_session"},
+                            {"label": "staticHTML", "value": "staticHTML"},
                             {"label": "static_response", "value": "static_response"},
                             {"label": "static_xpath", "value": "static_xpath"}
                         ],

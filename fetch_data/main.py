@@ -12,7 +12,7 @@ from database import DatabaseManager
 
 class Company:
     def __init__(self, 
-                 id: int,
+                 id: str,
                  company_name: str, 
                  URL: str, 
                  website_type: str, 
@@ -96,7 +96,7 @@ class StaticPageParser:
         available = company_original_info['available']
         return Company(id, company_name, url, website_type, parameters, is_local, location, category, available)
     
-    def parsing_by_dynamic_session(self, company: Company) -> list:
+    def parsing_by_staticHTML(self, company: Company) -> list:
         position_list = []
         session = HTMLSession()
         response = session.get(company.URL)
@@ -109,19 +109,6 @@ class StaticPageParser:
         )
         for position in company_items:
             position_list.append(position.get_text(strip=True))
-        return position_list
-
-    def parsing_by_tags(self, company: Company) -> list:
-        position_list = []
-        response = self.get_company_original_info(company.URL)
-        if response is None:
-            return position_list
-        
-        soup = BeautifulSoup(response.text, 'html.parser')
-        company_items = soup.find_all(company.parameters['tag'], attrs=company.parameters['attribute'])
-        for position in company_items:
-            position_list.append(position.text)
-        #print("position_list = ", position_list)
         return position_list
 
     def parsing_by_response(self, company: Company) -> list:
@@ -137,7 +124,6 @@ class StaticPageParser:
                 headers=company.parameters["headers"],
             )
         content = response.json()
-        # 使用exec并传递当前命名空间
         local_vars = {"content": content, "position_list": []}
         exec(company.parameters["script"], globals(), local_vars)
         position_list = local_vars.get("position_list", [])
@@ -158,9 +144,9 @@ class StaticPageParser:
                               "parameters": company.parameters}
             
             # check website type
-            # Type 1: dynamic_HTML_session: could be get info with session
-            if company.website_type == 'dynamic_HTML_session':
-                company_result["position_list"] = self.parsing_by_dynamic_session(company)
+            # Type 1: staticHTML: could be get info with session
+            if company.website_type == 'staticHTML':
+                company_result["position_list"] = self.parsing_by_staticHTML(company)
             
             # Type 2: static_response: extract data from the response of get request
             elif company.website_type == "static_response":
