@@ -8,7 +8,7 @@ from selenium.webdriver.edge.options import Options
 from selectolax.parser import HTMLParser
 import chompjs
 from parsel import Selector
-from requests_html import HTMLSession
+from requests_html import HTMLSession, HTMLResponse
 from typing import Optional, Dict, Any, List
 from database import DatabaseManager
 
@@ -117,6 +117,19 @@ class StaticPageParser:
         available = company_original_info['available']
         return Company(id, company_name, url, website_type, parameters, is_local, location, category, available)
     
+    def extract_positions_by_bs4(self, company: Company, response) -> list:
+        position_list = []
+        if isinstance(response, HTMLResponse):
+            soup = BeautifulSoup(response.content, "html.parser")
+        else:
+            soup = BeautifulSoup(response, "html.parser")
+        company_items = soup.find_all(
+            company.parameters["tag"], attrs=company.parameters["attribute"]
+        )
+        for position in company_items:
+            position_list.append(position.get_text(strip=True))
+        return position_list
+
     def parsing_by_staticHTML(self, company: Company) -> list:
         position_list = []
         session = HTMLSession()
@@ -124,12 +137,7 @@ class StaticPageParser:
         # check if the response is None
         if response is None:
             return position_list
-        soup = BeautifulSoup(response.content, "html.parser")
-        company_items = soup.find_all(
-            company.parameters["tag"], attrs=company.parameters["attribute"]
-        )
-        for position in company_items:
-            position_list.append(position.get_text(strip=True))
+        position_list = self.extract_positions_by_bs4(company, response)
         return position_list
 
     def parsing_by_response(self, company: Company) -> list:
@@ -159,12 +167,7 @@ class StaticPageParser:
         driver.implicitly_wait(3)
         html = driver.page_source
         browser.stop_browser()
-        soup = BeautifulSoup(html, 'html.parser')
-        company_items = soup.find_all(
-            company.parameters["tag"], attrs=company.parameters["attribute"]
-        )
-        for position in company_items:
-            position_list.append(position.get_text(strip=True))
+        position_list = self.extract_positions_by_bs4(company, html)
         return position_list
     
     def parsing(self) -> list:

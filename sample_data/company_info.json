@@ -11,7 +11,6 @@
             },
             "index_num": 0
         },
-        "filters": [],
         "is_local": true,
         "location": [42.55309863630028, -71.44162944490446],
         "category": "Tech",
@@ -29,7 +28,6 @@
             },
             "index_num": 0
         },
-        "filters": [],
         "is_local": true,
         "location": [42.39651151734183, -71.25852770808905],
         "category": "Tech",
@@ -47,7 +45,6 @@
             },
             "index_num": 0
         },
-        "filters": [],
         "is_local": false,
         "location": [42.574936070623046, -71.30666888400216],
         "category": "Tech",
@@ -69,7 +66,6 @@
             "script": "for item in content['jobPostings']:\n    if 'MA' in item['externalPath']:\n        position_list.append(item['title'])",
             "index_num": 0
         },
-        "filters": [],
         "is_local": true,
         "location": [42.574936070623046, -71.30666888400216],
         "category": "Tech",
@@ -89,7 +85,6 @@
             "script": "for item in content['result']:\n    position_list.append(item['jobOpeningName'])",
             "index_num": 0
         },
-        "filters": [],
         "is_local": false,
         "location": [42.56030511657889, -71.43490784961296],
         "category": "Tech",
@@ -109,7 +104,6 @@
             "script": "position_list = [item['node']['title'] for item in content['data']['jobs']['edges'] if item['node']['jobpositions'][0]['name'] == 'USA - Waltham']",
             "index_num": 0
         },
-        "filters": [],
         "is_local": true,
         "location": [42.40430562336942, -71.27547648856577],
         "category": "Tech",
@@ -129,10 +123,27 @@
             "script": "position_list = [item['title'] for item in content['jobsPosts']['data']['jobPosts']]",
             "index_num": 0
         },
-        "filters": [],
         "is_local": true,
         "location": [42.564600842578116, -71.42390798443282],
         "category": "Environmental",
         "available": "True"
+    },
+    {
+        "company_name": "NOKIA",
+        "URL": "https://fa-evmr-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/requisitions?lastSelectedFacet=LOCATIONS&latitude=42.464161155857674&location=239+School+St%2C+Middlesex%2C+MA%2C+United+States&longitude=-71.42785067776921&mode=geolocation&radius=25&radiusUnit=MI&selectedLocationsFacet=300000000480126",
+        "website_type": "dynamic_HTML",
+        "parameters": {
+            "tag": "span",
+            "attribute": {
+                "class": "job-tile__title"
+            },
+            "index_num": 0
+        },
+        "filters": [],
+        "is_local": true,
+        "position": [42.55134991704785, -71.44829989735447],
+        "category": "Tech",
+        "available": "True"
     }
+
 ]

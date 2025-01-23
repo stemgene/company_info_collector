@@ -13,7 +13,7 @@ def generate_job_list(results):
                 [
                     html.H2(
                         html.A(
-                            result["company_name"], href=result["URL"], target="_blank"
+                            result["company_name"], href=result["URL"], target="_blank", style={'font-size': '20px'}
                         )
                     ),
                     html.Ul(
