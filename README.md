@@ -11,10 +11,13 @@ This project includes two main features:
 ## Installation
 
 1. Create Virtual Environment
+I prefer using the Anaconda to manage my Python environments. But you can also use Python env itself.
+
 ```sh
 conda create --name info_collector python=3.11
 conda activate info_collector
 ```
+
 2. Install Dependencies
 ```sh
 pip install -r requirements.txt
@@ -30,10 +33,26 @@ Create a `.env` file in the project root directory and add the following content
 MONGODB_USERNAME=your_mongodb_username
 MONGODB_PASSWORD=your_mongodb_password
 ```
-4. 运行应用：
+4. Run the app：
 ```sh
-python dash_app/app.py
+python app.py
 ```
+
+> Once the environment has been setup, there's no need to configure it again. For daily usage, simply activate the environment and run the `app.py` file.
+> To make it easier, you can also create a bash script and execute everything within a single command.
+
+5. Create a bash code. (Optional)
+Firstly, please create a new file named "run_collector.sh", and then input the following code.
+```sh
+#!/bin/bash
+# to access the code folder
+cd "the code folder"
+# active the environment
+conda activate info_collector
+# run the app
+python app.py
+```
+Then you can place this `.sh` file in a location that's easy to access, such as the Desktop or the Downloads folder. Then run `bash run_collector.sh` and to start the application.
 
 ## Usage
 
