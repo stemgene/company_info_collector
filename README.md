@@ -5,12 +5,25 @@
 When searching for job opportunities, we often visit job boards like LinkedIn, Glassdoor, and Indeed. However, there are dozens of such websites, and it’s impossible to browse them all. Additionally, not all companies post their open positions on the platforms we frequent browsed. As a result, we often visit individual company websites to check for newly released positions. If the number of these websites grows, manually opening dozens of sites daily becomes tedious. A unified platform that consolidates information from these customized sources is highly desirable. This project aims to address this need.
 
 This project includes two main features:
-1. Extract job position information from target companies using web scraping. If couldn't extract the available positions by some reasons, you can also put the company's name and link on the page just as a reminder.
-2. Embed Google Maps to locate and display information about local companies.
+1. Job Position Information Extraction
+
+Using web scraping, this project extracts job position data from target companies. I’ve developed various methods to collect position data from multiple types of websites, including job boards such as BambooHR and Greenhouse.io.
+
+If, for any reason, the available positions cannot be extracted, you can add the company's name and website link to the display page as a reminder to check regularly.
+
+![img](/assets/images/home.png)
+
+1. Google Maps Integration
+
+This feature embeds Google Maps to locate and display information about local companies. It allows you to explore and keep track of businesses around your area by placing markers on the map using latitude and longitude.
+
+![img](/assets/images/map.png)
 
 ## Installation
 
-1. Create Virtual Environment
+1. Clone this project to your own computer as we've learned during the Software Development Tools.
+
+2. Create Virtual Environment
 I prefer using the Anaconda to manage my Python environments. But you can also use Python env itself.
 
 ```sh
@@ -18,11 +31,11 @@ conda create --name info_collector python=3.11
 conda activate info_collector
 ```
 
-2. Install Dependencies
+3. Install Dependencies
 ```sh
 pip install -r requirements.txt
 ```
-3. Configure MongoDB database and Environment Variables
+4. Configure MongoDB database and Environment Variables
 
 Given the diversity of methods and parameters required to extract job data from different companies, NoSQL (MongoDB) is the best option for saving company information due to its ability to store data in JSON format.
 
@@ -33,15 +46,17 @@ Create a `.env` file in the project root directory and add the following content
 MONGODB_USERNAME=your_mongodb_username
 MONGODB_PASSWORD=your_mongodb_password
 ```
-4. Run the app：
+5. Run the app：
 ```sh
 python app.py
 ```
 
-> Once the environment has been setup, there's no need to configure it again. For daily usage, simply activate the environment and run the `app.py` file.
-> To make it easier, you can also create a bash script and execute everything within a single command.
+6. Create a bash code. (Optional)
+   
+Once the environment has been setup, there's no need to configure it again. For daily usage, simply activate the environment and run the `app.py` file.
 
-5. Create a bash code. (Optional)
+To make it easier, you can also create a bash script and execute everything within a single command.
+
 Firstly, please create a new file named "run_collector.sh", and then input the following code.
 ```sh
 #!/bin/bash
