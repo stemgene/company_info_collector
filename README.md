@@ -63,7 +63,7 @@ Firstly, please create a new file named "run_collector.sh", and then input the f
 # to access the code folder
 cd "the code folder"
 # active the environment
-conda activate info_collector
+source activate info_collector
 # run the app
 python app.py
 ```
