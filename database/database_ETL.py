@@ -3,6 +3,7 @@ from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 import os
 import json
+import ssl
 
 
 class DatabaseManager:
@@ -14,10 +15,12 @@ class DatabaseManager:
         mongodb_username = os.getenv("MONGODB_USERNAME")
         mongodb_password = os.getenv("MONGODB_PASSWORD")
         # Replace the following line to your MongoDB URI
+
         uri = f"mongodb+srv://{mongodb_username}:{mongodb_password}@mynosqlserver.1ev6o.mongodb.net/?retryWrites=true&w=majority&appName=MyNoSQLServer"
 
         # Create a new client and connect to the server
         self.client = MongoClient(uri, server_api=ServerApi("1"))
+        #self.client = MongoClient(uri, server_api=ServerApi("1"), tls=True, tlsAllowInvalidCertificates=True, tlsCAFile=ssl.get_default_verify_paths().cafile)
         # Send a ping to confirm a successful connection
         try:
             self.client.admin.command("ping")
